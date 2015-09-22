@@ -6,9 +6,14 @@
 	"library": "./library.js",
 	"templates": "./public/templates",
 	"hooks": [
-	{ "hook": "static:app.load", "method": "onLoad" },
-	{ "hook": "filter:parse.post", "method": "parse", "callbacked": true, "priority": 5 },
-	{ "hook": "filter:admin.header.build", "method": "admin.menu", "callbacked": false }
+		{ "hook": "static:app.load", "method": "onLoad" },
+		{ "hook": "filter:parse.post", "method": "parse", "callbacked": true, "priority": 5 },
+		{ "hook": "filter:admin.header.build", "method": "admin.menu", "callbacked": false }
 	],
-	"staticDirs": {}
+	"staticDirs": {
+	        "static": "./static"
+    	},
+    	"css": [
+        	"static/style.css"
+    	]
 }

@@ -3,12 +3,12 @@
 		<div class="panel panel-default">
 			<div class="panel-heading">Embed Google Map</div>
 			<div class="panel-body">
-				<form class="form">
+				<form class="form" id="embedGMap-form">
 	<div class="row">
 		<div class="col-sm-6 col-xs-12">
 			<div class="form-group">
 				<label>Google Maps Embed API Key</label>
-				<input id="embedGMapAPIKey" type="text" class="form-control" placeholder="Enter Google Maps Embed API Key" value="{settings.embedGMapAPIKey}">
+				<input id="embedGMapAPIKey" type="text" class="form-control" placeholder="Enter Google Maps Embed API Key" data-key="strings.embedGMapAPIKey" value="{settings.embedGMapAPIKey}">
 			</div>
 		</div>
 	</div>
@@ -29,16 +29,14 @@
 <input id="csrf_token" type="hidden" value="{csrf}" />
 
 <script>
-	$('#save').on('click', function() {
-			var data = {
-				_csrf: $('#csrf_token').val(),
-				embedGMapAPIKey: $('#embedGMapAPIKey').val(),
-			};
-
-			$.post(config.relative_path + '/api/admin/plugins/embedgmap/save', data, function(data) {
-				app.alertSuccess(data.message);
+	require(['settings'], function(settings) {
+		var wrapper = $('#embedGMap-form');
+		settings.sync('embed-gmap',wrapper);
+		$('#save').on('click', function(e) {
+			e.preventDefault();
+			settings.persist('embed-gmap', wrapper, function() {
+				socket.emit('admin.settings.syncEmbedGMap');
 			});
-
-		return false;
+		});
 	});
 </script>

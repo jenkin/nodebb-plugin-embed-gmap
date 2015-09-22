@@ -9,31 +9,24 @@
 	var constants = Object.freeze({
 		"name": "EmbedGMap",
 		"admin": {
-			"route": "/plugins/embedgmap/",
+			"route": "/plugins/embed-gmap/",
 			"icon": "fa-th-large",
 			"name": "EmbedGMap"
 		},
-		"namespace": "nodebb-plugin-embedgmap"
+		"namespace": "nodebb-plugin-embed-gmap"
 	});
 
 	var defaultSettings = {
-		booleans: {
-			hasMarkdown: true
-		},
 		strings: {
 			embedGMapAPIKey: ''
 		}
 	};
 
-	var settings = new Settings('embedgmap', '0.1.0', defaultSettings, function(){
+	var settings = new Settings('embed-gmap', '0.1.0', defaultSettings, function(){
 		winston.info('EmbedGMap settings loaded');
 	});
 
-	var EmbedGMap = {},
-	    api_key = settings.get('strings.embedGMapAPIKey') || '',
-	    link = '<a href="'+(api_key ? '#embed-gmap-$1' : '#')+'">$2</a>&nbsp;<a href="https://www.google.it/maps/place/$3/" target="_blank"><i class="fa fa-external-link"></i></a>',	
-	    embed = '<iframe id="embed-gmap-$1" width="640" height="480" frameborder="0" style="border:0" src="https://www.google.com/maps/embed/v1/place?key='+api_key+'&q=$2" allowfullscreen></iframe>';
-	var place = [], index1 = 0, index2 = 0;
+	var EmbedGMap = {};
 
 	var markdown = /\[map ([^\]]+)\]/g;
         
@@ -43,6 +36,12 @@
 	};
 
 	EmbedGMap.parse = function(data, callback) {
+	    
+		var api_key = settings.get('strings.embedGMapAPIKey') || '',
+	    	link = '<a href="'+(api_key ? '#embed-gmap-$1' : '#')+'">$2</a>&nbsp;<a href="https://www.google.it/maps/place/$3/" target="_blank"><i class="fa fa-external-link"></i></a>',	
+	    	embed = '<div id="embed-gmap-$1" class="embed-container"><iframe width="100%" height="480" frameborder="0" style="border:0" src="https://www.google.com/maps/embed/v1/place?key='+api_key+'&q=$2" allowfullscreen></iframe></div>';
+
+	var place = [], index1 = 0, index2 = 0;
         if (!data || !data.postData || !data.postData.content) {
             return callback(null, data);
         }
@@ -50,7 +49,7 @@
 	    if (api_key) {
 	    while (place = markdown.exec(data.postData.content)) {
 		winston.info("Map for place #"+index1+": "+place[1]);
-		data.postData.content += '<p>'+embed.replace('$1',index1++).replace('$2',encodeURI(place[1].toLowerCase()))+'</p>';
+		data.postData.content += '<p></p>'+embed.replace('$1',index1++).replace('$2',encodeURI(place[1].toLowerCase()));
 	    }
 	    }
             data.postData.content = data.postData.content.replace(markdown, function(m,g) {
@@ -64,26 +63,15 @@
 	
 	EmbedGMap.onLoad = function(params, callback) {
 		function render(req, res, next) {
-			res.render('admin/plugins/embedgmap');
+			res.render('admin/plugins/embed-gmap');
 		}
 
-		params.router.get('/admin/plugins/embedgmap', params.middleware.admin.buildHeader, render);
-		params.router.get('/api/admin/plugins/embedgmap', render);
+		params.router.get('/admin/plugins/embed-gmap', params.middleware.admin.buildHeader, render);
+		params.router.get('/api/admin/plugins/embed-gmap', render);
 
 		EmbedGMap.init();
 		callback();
 	};
-
-	SocketAdmin.settings.syncEmbedGMap = function(data) {
-		winston.info('EmbedGMap: syncing settings');
-		settings.sync(EmbedGMap.init);
-	}
-
-	SocketAdmin.settings.clearPostCache = function(data) {
-		winston.info('Clearing all posts from cache');
-		Cache.reset();
-		// SocketAdmin.emit('admin.settings.postCacheCleared', {});
-	}
 
 	EmbedGMap.admin = {
 		menu: function (custom_header, callback) {
@@ -96,5 +84,11 @@
 		}
 	};
 
+	SocketAdmin.settings.syncEmbedGMap = function() {
+		winston.info('EmbedGMap: syncing settings');
+		settings.sync(EmbedGMap.init);
+	}
+
 	module.exports = EmbedGMap;
+
 }(module));

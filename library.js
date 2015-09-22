@@ -39,7 +39,7 @@
 	    
 		var api_key = settings.get('strings.embedGMapAPIKey') || '',
 	    	link = '<a href="'+(api_key ? '#embed-gmap-$1' : '#')+'">$2</a>&nbsp;<a href="https://www.google.it/maps/place/$3/" target="_blank"><i class="fa fa-external-link"></i></a>',	
-	    	embed = '<div id="embed-gmap-$1" class="embed-container"><iframe width="100%" height="480" frameborder="0" style="border:0" src="https://www.google.com/maps/embed/v1/place?key='+api_key+'&q=$2" allowfullscreen></iframe></div>';
+	    	embed = '<div id="embed-gmap-$1" class="embed-gmap col-xs-12 col-sm-6 col-md-4 col-lg-3"><iframe width="100%" height="360" frameborder="0" style="border:0" src="https://www.google.com/maps/embed/v1/place?key='+api_key+'&q=$2" allowfullscreen></iframe></div>';
 
 	var place = [], index1 = 0, index2 = 0;
         if (!data || !data.postData || !data.postData.content) {
@@ -47,10 +47,12 @@
         }
         if (data.postData.content.match(markdown)) {
 	    if (api_key) {
+		data.postData.content += '<div class="row">';
 	    while (place = markdown.exec(data.postData.content)) {
 		winston.info("Map for place #"+index1+": "+place[1]);
-		data.postData.content += '<p></p>'+embed.replace('$1',index1++).replace('$2',encodeURI(place[1].toLowerCase()));
+		data.postData.content += embed.replace('$1',index1++).replace('$2',encodeURI(place[1].toLowerCase()));
 	    }
+data.postData.content += '</div>';
 	    }
             data.postData.content = data.postData.content.replace(markdown, function(m,g) {
 		winston.info("Link for place #"+index2+": "+g);

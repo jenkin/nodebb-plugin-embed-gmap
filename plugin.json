@@ -1,0 +1,14 @@
+{
+	"id": "nodebb-plugin-embed-gmap",
+	"name": "NodeBB Embed Google Map",
+	"description": "NodeBB Plugin that allows users to embed Google Map with pointer inline in their posts from simple bbcode: [map location].",
+	"url": "https://github.com/a5mith/nodebb-plugin-embed-gmap",
+	"library": "./library.js",
+	"templates": "./public/templates",
+	"hooks": [
+	{ "hook": "static:app.load", "method": "onLoad" },
+	{ "hook": "filter:parse.post", "method": "parse", "callbacked": true, "priority": 5 },
+	{ "hook": "filter:admin.header.build", "method": "admin.menu", "callbacked": false }
+	],
+	"staticDirs": {}
+}

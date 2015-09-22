@@ -1,0 +1,42 @@
+{
+  "name": "nodebb-plugin-embed-gmap",
+  "version": "0.1.0",
+  "nbbpm": {
+    "compatibility": ">=0.7.0"
+  },
+  "description": "NodeBB Embed Google Map Plugin",
+  "main": "library.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jenkin/nodebb-plugin-embed-gmap.git"
+  },
+  "keywords": [
+    "nodebb",
+    "plugin",
+    "google map",
+    "custom",
+    "embed"
+  ],
+  "author": {
+    "name": "jenkin",
+    "email": "alessio.cimarelli@gmail.com"
+  },
+  "license": "BSD-2-Clause",
+  "bugs": {
+    "url": "https://github.com/jenkin/nodebb-plugin-embed-gmap/issues"
+  },
+  "dependencies": {
+    "winston": "^0.8.3"
+  },
+  "_id": "nodebb-plugin-embed-gmap@0.1.0",
+  "_npmUser": {
+    "name": "jenkin",
+    "email": "alessio.cimarelli@gmail.com"
+  },
+  "maintainers": [
+    {
+      "name": "jenkin",
+      "email": "alessio.cimarelli@gmail.com"
+    }
+  ]
+}
